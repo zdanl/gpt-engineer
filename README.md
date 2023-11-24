@@ -42,6 +42,9 @@ For **development**:
 
 For **GUI** release:
 
+- `sudo apt install python3-aiohttp`
+- `sudo apt install python3-socketio`
+- `pip install python-socketio`
 - `python3 applications/w3s/server.py &`
 - `cd /app`
 - `npm run build`
