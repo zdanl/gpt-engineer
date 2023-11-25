@@ -29,7 +29,7 @@ export default function Chat(props: { apiKeyApp: string }) {
   // *** If you use .env.local variable for your API key, method which we recommend, use the apiKey variable commented below
   const { apiKeyApp } = props;
 
-  socket.on("init", (value: string) => { setOutputCode(value) });
+  socket.on("init", (value: string) => { alert(value); setOutputCode(value) });
 
   // Input States
   const [inputOnSubmit, setInputOnSubmit] = useState<string>('');
@@ -79,10 +79,11 @@ export default function Chat(props: { apiKeyApp: string }) {
       return;
     }
 
-    setOutputCode(' ');
+    setOutputCode('Hang in there for a few seconds ...');
     setLoading(true);
     const controller = new AbortController();
     socket.emit('init', inputCode);
+    alert("Hang tight for a few seconds");
     setLoading(false);
   };
   // -------------- Copy Response --------------

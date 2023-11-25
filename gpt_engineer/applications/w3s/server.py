@@ -37,7 +37,7 @@ class GPTEngineerNamespace(socketio.AsyncNamespace):
     async def on_init(self, sid, prompt):
         print(f"Initializing: {prompt}")
         code = agent.init(prompt)
-        await self.emit("init", {"payload": json.dumps(code)})
+        await self.emit("init", json.dumps(code))
 
     async def on_improve(event, sid, data):
         print(f"{event}: {data}")
