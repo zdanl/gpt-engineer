@@ -26,8 +26,9 @@ import routes from '@/routes';
 export default function HeaderLinks(props: {
   secondary: boolean;
   setApiKey: any;
+  apiKey: string;
 }) {
-  const { secondary, setApiKey } = props;
+  const { secondary, apiKey, setApiKey } = props;
   const { colorMode, toggleColorMode } = useColorMode();
   // Chakra Color Mode
   const navbarIcon = useColorModeValue('gray.500', 'white');
@@ -71,7 +72,7 @@ export default function HeaderLinks(props: {
         borderRadius="30px"
       />
       <SidebarResponsive routes={routes} />
-      <APIModal setApiKey={setApiKey} />
+      <APIModal apiKey={apiKey} setApiKey={setApiKey} />
 
       <Button
         variant="no-hover"

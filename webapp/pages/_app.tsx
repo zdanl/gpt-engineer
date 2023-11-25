@@ -51,14 +51,22 @@ function App({ Component, pageProps }: AppProps<{}>) {
       setGPTEvents((previous) => [...previous, value]);
     }
 
+    function onAPIKey(key: string) {
+      console.log(`API Key received ${key}`);
+      localStorage.setItem("apiKey", key);
+      setApiKey(key);
+    }
+
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
     socket.on("event", onGPTEvent);
+    socket.on("openai_api_key", onAPIKey);
 
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
       socket.off("event", onGPTEvent);
+      socket.off("openai_api_key", onAPIKey);
     };
   }, [apiKey]);
 
@@ -69,7 +77,7 @@ function App({ Component, pageProps }: AppProps<{}>) {
       <ConnectionManager />
       <ChakraProvider theme={theme}>
         <Box>
-          <Sidebar setApiKey={setApiKey} routes={routes} />
+          <Sidebar apiKey={apiKey} setApiKey={setApiKey} routes={routes} />
           <Box
             pt={{ base: "60px", md: "100px" }}
             float="right"
@@ -89,6 +97,7 @@ function App({ Component, pageProps }: AppProps<{}>) {
               <Box>
                 <Navbar
                   setApiKey={setApiKey}
+                  apiKey={apiKey}
                   onOpen={onOpen}
                   logoText={"GPT-Engineer"}
                   brandText={getActiveRoute(routes, pathname)}

@@ -58,6 +58,10 @@ class LeanAgent(BaseAgent):
         self.execution_env.execute_program(code)
         return code
 
+    def seed(self, api_key: str) -> bool:
+        # Overwrite API Key
+        return True
+
     def improve(
         self, code: Code, prompt: str, execution_command: str = ENTRYPOINT_FILE
     ) -> Code:

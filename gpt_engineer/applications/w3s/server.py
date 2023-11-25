@@ -3,15 +3,18 @@
 # * @zdanl here modiyfing @atheorell work from websockets to socket.io
 
 from aiohttp import web
-import aiohttp_cors
 import socketio
 import tempfile
 import json
+import os
 
 from gpt_engineer.core.default.lean_agent import LeanAgent
-from gpt_engineer.core.preprompt_holder import PrepromptHolder
 
-sio = socketio.AsyncServer(cors_allowed_origins="*")
+# from gpt_engineer.core.preprompt_holder import PrepromptHolder
+
+sio = socketio.AsyncServer(async_mode="aiohttp", cors_allowed_origins="*")
+# sio.set('transports', ['websocket']);
+
 app = web.Application()
 sio.attach(app)
 
@@ -20,22 +23,21 @@ agent = LeanAgent.with_default_config(tempdir)
 
 
 class GPTEngineerNamespace(socketio.AsyncNamespace):
-    def on_connect(self, sid, environ):
+    async def on_connect(self, sid, environ):
         print("Real-time socket to browser established.")
+        await self.emit("openai_api_key", os.environ["OPENAI_API_KEY"])
 
     def on_disconnect(self, sid):
         print("Browser disconnected.")
 
-    def on_my_event(self, sid, data):
-        self.emit("my_response", data)
-
-    def on_gp4_apikey(self, sid, data):
+    async def on_openai_api_key(self, sid, data):
+        print(f"Received new OpenAI API Key: {data}")
         code = agent.seed(data)
 
-    async def on_init(event, sid, data):
-        print(f"{event}: {data}")
-        code = agent.init(event["prompt"])
-        await socketio.emit("prompt", {"payload": json.dumps(code)})
+    async def on_init(self, sid, prompt):
+        print(f"Initializing: {prompt}")
+        code = agent.init(prompt)
+        await self.emit("init", {"payload": json.dumps(code)})
 
     async def on_improve(event, sid, data):
         print(f"{event}: {data}")
@@ -52,7 +54,7 @@ class GPTEngineerNamespace(socketio.AsyncNamespace):
         await socketio.emit("execute", {"payload": payload})
 
 
-sio.register_namespace(GPTEngineerNamespace("/gptengineer"))
+sio.register_namespace(GPTEngineerNamespace("/gpt-engineer"))
 
 
 async def main():

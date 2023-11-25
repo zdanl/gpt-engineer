@@ -20,6 +20,7 @@ export default function AdminNavbar(props: {
   logoText: string;
   onOpen: (...args: any[]) => any;
   setApiKey: any;
+  apiKey: string;
 }) {
   const [scrolled, setScrolled] = useState(false);
 
@@ -31,7 +32,7 @@ export default function AdminNavbar(props: {
     };
   });
 
-  const { secondary, brandText, setApiKey } = props;
+  const { secondary, brandText, apiKey, setApiKey } = props;
 
   // Here are all the props that may change depending on navbar's type or state.(secondary, variant, scrolled)
   let mainText = useColorModeValue('navy.700', 'white');
@@ -146,7 +147,7 @@ export default function AdminNavbar(props: {
           </Link>
         </Box>
         <Box ms="auto" w={{ sm: '100%', md: 'unset' }}>
-          <AdminNavbarLinks setApiKey={setApiKey} secondary={props.secondary} />
+          <AdminNavbarLinks apiKey={apiKey} setApiKey={setApiKey} secondary={props.secondary} />
         </Box>
       </Flex>
     </Box>

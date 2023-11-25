@@ -27,9 +27,10 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { MdLock } from 'react-icons/md';
+import { socket } from "@/socket";
 
-function APIModal(props: { setApiKey: any; sidebar?: boolean }) {
-  const { setApiKey, sidebar } = props;
+function APIModal(props: { apiKey: string; setApiKey: any; sidebar?: boolean }) {
+  const { apiKey, setApiKey, sidebar } = props;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [inputCode, setInputCode] = useState<string>('');
 
@@ -47,9 +48,11 @@ function APIModal(props: { setApiKey: any; sidebar?: boolean }) {
 
   const handleApiKeyChange = (value: string) => {
     setApiKey(value);
-
     localStorage.setItem('apiKey', value);
+    console.log("Sending fresh API Key to client: " + value);
+    socket.emit("openai_api_key", value);
   };
+
   return (
     <>
       {sidebar ? (
@@ -102,9 +105,9 @@ function APIModal(props: { setApiKey: any; sidebar?: boolean }) {
                 lineHeight="28px"
                 mb="22px"
               >
-                You need an OpenAI API Key to use Horizon AI Template's
-                features. Your API Key is stored locally on your browser and
-                never sent anywhere else.
+                You need an OpenAI API Key to use GPT Engineer.
+                Your API Key is stored locally on your browser and
+                shell environment and never sent anywhere else.
               </Text>
               <Flex mb="20px">
                 <Input
@@ -119,7 +122,7 @@ function APIModal(props: { setApiKey: any; sidebar?: boolean }) {
                   _focus={{ borderColor: 'none' }}
                   _placeholder={{ color: 'gray.500' }}
                   color={inputColor}
-                  placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                  placeholder={apiKey}
                   onChange={handleChange}
                   value={inputCode}
                 />
@@ -140,7 +143,7 @@ function APIModal(props: { setApiKey: any; sidebar?: boolean }) {
                     if (inputCode)
                       toast({
                         title: inputCode?.includes('sk-')
-                          ? `Success! You have successfully added your API key!`
+                          ? `Success! You have successfully added/updated your API key!`
                           : !inputCode?.includes('sk-')
                           ? `Invalid API key. Please make sure your API key is still working properly.`
                           : 'Please add your API key!',
