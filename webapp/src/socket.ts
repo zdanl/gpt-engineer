@@ -1,3 +1,5 @@
+"use client"
+
 import { io } from 'socket.io-client';
 
 declare var process : {
@@ -7,7 +9,9 @@ declare var process : {
   }
 }
 
-const URL = `ws://${process.env.GPTENGINEER_SOCKETIO_HOST || "localhost"}:${process.env.GPTENGINEER_SOCKETIO_PORT || "4444"}/gpt-engineer`;
+//const URL = `ws://${process.env.GPTENGINEER_SOCKETIO_HOST || "localhost"}:${process.env.GPTENGINEER_SOCKETIO_PORT || "4444"}/gpt-engineer`;
+
+const URL = `ws://cyan.peers.lyra.ly:${process.env.GPTENGINEER_SOCKETIO_PORT || "4444"}/gpt-engineer`;
 
 console.log(`Listenting at ${URL}`);
 

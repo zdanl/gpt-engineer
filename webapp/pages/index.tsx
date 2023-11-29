@@ -29,7 +29,7 @@ export default function Chat(props: { apiKeyApp: string }) {
   // *** If you use .env.local variable for your API key, method which we recommend, use the apiKey variable commented below
   const { apiKeyApp } = props;
 
-  socket.on("init", (value: string) => { setOutputCode(value) });
+  socket.on("init", (value: string) => { setLoading(false); setOutputCode(value) });
 
   // Input States
   const [inputOnSubmit, setInputOnSubmit] = useState<string>('');
@@ -83,8 +83,6 @@ export default function Chat(props: { apiKeyApp: string }) {
     setLoading(true);
     const controller = new AbortController();
     socket.emit('init', inputCode);
-    alert("Hang tight for a few seconds");
-    setLoading(false);
   };
   // -------------- Copy Response --------------
   // const copyToClipboard = (text: string) => {
@@ -338,8 +336,7 @@ export default function Chat(props: { apiKeyApp: string }) {
           alignItems="center"
         >
           <Text fontSize="xs" textAlign="center" color={gray}>
-            Free Research Preview. ChatGPT may produce inaccurate information
-            about people, places, or facts.
+            Please not that GPT-Engineer may produce code that doesn't work or is insecure.
           </Text>
           <Link href="https://help.openai.com/en/articles/6825453-chatgpt-release-notes">
             <Text
